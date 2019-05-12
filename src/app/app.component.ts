@@ -34,7 +34,6 @@ export class AppComponent {
     private icons: MatIconRegistry,
     private sanitizer: DomSanitizer
   ) {
-    this.img64 = sanitizer.bypassSecurityTrustUrl("data:image/jpg;base64, aHR0cHM6Ly9jZG4ucmF3Z2l0LmNvbS9qYWltZXN0aWxsL3Zpb2xldC1jb2xkLWluLXNwYWNlLzlhNjU5NmQ1MWZkODgwOGQ1NDA5ZWE4OGE3MGZmYjhjYzRmZjkyOTMvc3JjL2Fzc2V0cy9pbWFnZXMva09zbWlrLmpwZw==");
     this.registerIcon('facebook');
     this.registerIcon('instagram');
     this.registerIcon('bandcamp');
