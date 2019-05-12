@@ -146,6 +146,7 @@
           fxLayoutAlign="start center">
     <button mat-icon-button
             color="primary"
+            [matTooltip]="audio.muted ? 'Unmute' : 'Mute'"
             (click)="audio.toggleMute()">
       <mat-icon *ngIf="!(audio.muted)">volume_up</mat-icon>
       <mat-icon *ngIf="audio.muted">volume_off</mat-icon>
@@ -161,6 +162,7 @@
     <span fxFlex></span>
     <button mat-icon-button
             color="primary"
+            matTooltip="Toggle Visual"
             (click)="toggleVisual()">
       <mat-icon>scatter_plot</mat-icon>
     </button>
