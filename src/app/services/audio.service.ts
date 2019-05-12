@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AudioService {
-  private SRC = '../../assets/audio/contact.mp3';
+  private SRC = 'https://rawcdn.githack.com/JaimeStill/violet-cold-space/47389c132890595db4786e43ddc564e4d698f74f/src/assets/audio/contact.mp3';
 
   bufferLength: number;
   floatTimeDomainData: Float32Array;
