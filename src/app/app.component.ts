@@ -14,7 +14,7 @@ import {
   VisualService
 } from './services';
 
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -25,8 +25,8 @@ import { DomSanitizer } from '@angular/platform-browser';
   ]
 })
 export class AppComponent {
+  img64: SafeUrl;
   isOscillator = true;
-  loaded = false;
 
   constructor(
     public audio: AudioService,
@@ -34,6 +34,7 @@ export class AppComponent {
     private icons: MatIconRegistry,
     private sanitizer: DomSanitizer
   ) {
+    this.img64 = sanitizer.bypassSecurityTrustUrl("data:image/jpg;base64, aHR0cHM6Ly9jZG4ucmF3Z2l0LmNvbS9qYWltZXN0aWxsL3Zpb2xldC1jb2xkLWluLXNwYWNlLzlhNjU5NmQ1MWZkODgwOGQ1NDA5ZWE4OGE3MGZmYjhjYzRmZjkyOTMvc3JjL2Fzc2V0cy9pbWFnZXMva09zbWlrLmpwZw==");
     this.registerIcon('facebook');
     this.registerIcon('instagram');
     this.registerIcon('bandcamp');
@@ -47,9 +48,17 @@ export class AppComponent {
     this.sanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${icon}.svg`)
   );
 
+  @ViewChild('player')
+  set player(player: ElementRef<HTMLAudioElement>) {
+    if (player) {
+      this.audio.initializeAudio(player.nativeElement)
+        .then(() => this.initVisual());
+    }
+  }
+
   @ViewChild('visuals')
   set visuals(visuals: ElementRef<HTMLCanvasElement>) {
-    if (visuals && this.audio.context) {
+    if (visuals) {
       this.visual.initialize(visuals.nativeElement);
     }
   }
@@ -57,15 +66,7 @@ export class AppComponent {
   private initVisual = () => this.isOscillator ?
     this.setOscillator() : this.setSpectrum();
 
-  loadBuffer = async () => {
-    try {
-      const res = await this.audio.initializeAudio();
-      console.log('res', res);
-      this.loaded = res;
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  scanTrack = (event: MatSliderChange) => this.audio.scanTrack(event.value);
 
   toggleVisual = () => {
     this.isOscillator = !this.isOscillator;

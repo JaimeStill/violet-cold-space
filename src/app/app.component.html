@@ -1,6 +1,7 @@
 <div fxLayout="column"
      fxLayoutAlign="start stretch"
      class="app-container">
+  <audio #player></audio>
   <header fxLayout="row"
           fxLayoutAlign="start center">
     <a href="https://violetcold.bandcamp.com/"
@@ -96,38 +97,72 @@
       </mat-menu>
     </span>
   </header>
-  <section *ngIf="!(loaded)"
-           fxLayout="column"
-           fxLayoutAlign="center center">
-    <button mat-button
-            color="primary"
-            (click)="loadBuffer()">
-      Load App
-    </button>
+  <section fxLayout="column"
+           fxLayoutAlign="center stretch"
+           fxFlex>
+    <canvas #visuals
+            class="visuals"></canvas>
   </section>
-  <ng-container *ngIf="loaded">
-    <footer fxLayout="row"
-            fxLayoutAlign="start center">
-      <button mat-icon-button
+  <section fxFlex
+           class="body"
+           fxLayout="column"
+           fxLayoutAlign="end center">
+    <div class="image-container">
+      <img class="album-art"
+           src="../assets/images/kOsmik.jpg"
+           [width]="400">
+      <button mat-fab
               color="primary"
-              (click)="audio.toggleMute()">
-        <mat-icon *ngIf="!(audio.muted)">volume_up</mat-icon>
-        <mat-icon *ngIf="audio.muted">volume_off</mat-icon>
+              class="play-button"
+              (click)="audio.togglePlayback()">
+        <mat-icon class="large"
+                  [inline]="true"
+                  *ngIf="!(audio.playing)">play_arrow</mat-icon>
+        <mat-icon class="large"
+                  [inline]="true"
+                  *ngIf="audio.playing">pause</mat-icon>
       </button>
+    </div>
+    <section class="timer"
+             fxLayout="row"
+             fxLayoutAlign="space-evenly center"
+             [style.width.%]="64">
+      <p class="mat-body-strong color-primary"
+         [style.margin-bottom.px]="0"
+         [style.margin-right.px]="12">{{audio.progress | tracktime}}</p>
       <mat-slider color="primary"
-                  class="volume"
-                  [value]="audio.gain"
-                  [max]="3"
+                  fxFlex
+                  [(value)]="audio.progress"
                   [min]="0"
-                  [step]=".01"
-                  [style.width.px]="240"
-                  (input)="audio.updateVolume($event.value)"></mat-slider>
-      <span fxFlex></span>
-      <button mat-icon-button
-              color="primary"
-              (click)="toggleVisual()">
-        <mat-icon>scatter_plot</mat-icon>
-      </button>
-    </footer>
-  </ng-container>
+                  [max]="audio.duration"
+                  [step]=".1"
+                  (input)="scanTrack($event)"></mat-slider>
+      <p class="mat-body-strong color-primary"
+         [style.margin-bottom.px]="0"
+         [style.margin-left.px]="12">{{audio.duration | tracktime}}</p>
+    </section>
+  </section>
+  <footer fxLayout="row"
+          fxLayoutAlign="start center">
+    <button mat-icon-button
+            color="primary"
+            (click)="audio.toggleMute()">
+      <mat-icon *ngIf="!(audio.muted)">volume_up</mat-icon>
+      <mat-icon *ngIf="audio.muted">volume_off</mat-icon>
+    </button>
+    <mat-slider color="primary"
+                class="volume"
+                [value]="audio.gain"
+                [max]="3"
+                [min]="0"
+                [step]=".01"
+                [style.width.px]="240"
+                (input)="audio.updateVolume($event.value)"></mat-slider>
+    <span fxFlex></span>
+    <button mat-icon-button
+            color="primary"
+            (click)="toggleVisual()">
+      <mat-icon>scatter_plot</mat-icon>
+    </button>
+  </footer>
 </div>

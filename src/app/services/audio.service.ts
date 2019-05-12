@@ -9,7 +9,7 @@ export class AudioService {
   floatFrequencyData: Float32Array;
   byteFrequencyData: Uint8Array;
   byteTimeDomainData: Uint8Array;
-  source: AudioBufferSourceNode;
+  audio: HTMLAudioElement;
   context: AudioContext;
   audioNode: AudioNode;
   gainNode: GainNode;
@@ -21,25 +21,49 @@ export class AudioService {
   progress = 0;
   duration = 0;
 
-  private configureBuffer = async () => {
-    this.context = new AudioContext();
-    const source = this.context.createBufferSource();
-    const res = await fetch(this.SRC);
-    const buffer = await res.arrayBuffer();
-    const blob = await this.context.decodeAudioData(buffer);
-    source.buffer = blob;
-    source.loop = true;
+  private retrieveAudio = (): Promise<Blob> =>
+    new Promise((resolve, reject) => {
+      const sendReject = () => {
+        reject({ status: request.status, statusText: request.statusText });
+      }
+
+      const request = new XMLHttpRequest();
+      request.open('GET', this.SRC, true);
+      request.responseType = "blob";
+      console.log('request', request);
+      request.send();
+
+      request.onerror = () => sendReject();
+
+      request.onload = () => {
+        console.log('response', request.response);
+        request.status >= 200 && request.status < 300 ?
+          resolve(request.response) :
+          sendReject();
+      }
+    });
+
+  private configureAudio = async (audio: HTMLAudioElement) => {
+    this.audio = audio;
+    const blob = await this.retrieveAudio();
+    console.log('blob', blob);
+    this.audio.src = URL.createObjectURL(blob);
+    this.audio.loop = true;
+    this.audio.addEventListener('durationchange', () => this.duration = this.audio.duration);
+    this.audio.addEventListener('timeupdate', () => this.progress = this.audio.currentTime);
   }
 
   private setupContextAndNodes = () => {
+    this.context = new AudioContext();
     this.gainNode = this.context.createGain();
     this.analyser = this.context.createAnalyser();
   }
 
   private connectDestination = () => {
-    this.source.connect(this.gainNode)
-               .connect(this.analyser)
-               .connect(this.context.destination);
+    const trackNode = this.context.createMediaElementSource(this.audio);
+    trackNode.connect(this.gainNode)
+             .connect(this.analyser)
+             .connect(this.context.destination);
   }
 
   private setupAnalyserSources = () => {
@@ -63,10 +87,10 @@ export class AudioService {
   updateFloatFrequencyData = () =>
     this.analyser.getFloatFrequencyData(this.floatFrequencyData);
 
-  initializeAudio = (): Promise<boolean> =>
+  initializeAudio = (audio: HTMLAudioElement): Promise<boolean> =>
     new Promise(async (resolve, reject) => {
       try {
-        await this.configureBuffer();
+        await this.configureAudio(audio);
         this.setupContextAndNodes();
         this.connectDestination();
         this.setupAnalyserSources();
@@ -82,10 +106,10 @@ export class AudioService {
     }
 
     if (this.playing) {
-      await this.source.stop();
+      await this.audio.pause();
       this.playing = false;
     } else {
-      await this.source.start();
+      await this.audio.play();
       this.playing = true;
     }
   }
@@ -98,6 +122,11 @@ export class AudioService {
       this.gainNode.gain.value = this.gainValue;
       this.gain = this.gainValue;
     }
+  }
+
+  scanTrack = (val: number) => {
+    this.audio.currentTime = val;
+    this.progress = val;
   }
 
   toggleMute = () => {
