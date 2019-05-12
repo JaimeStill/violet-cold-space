@@ -1,0 +1,133 @@
+<div fxLayout="column"
+     fxLayoutAlign="start stretch"
+     class="app-container">
+  <header fxLayout="row"
+          fxLayoutAlign="start center">
+    <a href="https://violetcold.bandcamp.com/"
+       target="_blank"
+       class="mat-display-2">
+      <span class="color-primary">Violet</span> Cold
+    </a>
+    <span fxFlex></span>
+    <span fxHide.lt-sm="true">
+      <a mat-icon-button
+         color="primary"
+         href="https://open.spotify.com/artist/5eh1n96NC6g34nPqpIItIo"
+         target="_blank"
+         matTooltip="Spotify">
+        <mat-icon svgIcon="spotify"></mat-icon>
+      </a>
+      <a mat-icon-button
+         color="primary"
+         href="https://www.patreon.com/violetcold"
+         target="_blank"
+         matTooltip="Patreon">
+        <mat-icon svgIcon="patreon"></mat-icon>
+      </a>
+      <a mat-icon-button
+         color="primary"
+         href="https://www.facebook.com/VioletColdOfficial/"
+         target="_blank"
+         matTooltip="Facebook">
+        <mat-icon svgIcon="facebook"></mat-icon>
+      </a>
+      <a mat-icon-button
+         color="primary"
+         href="https://www.instagram.com/violetcoldofficial/"
+         target="_blank"
+         matTooltip="Instagram">
+        <mat-icon svgIcon="instagram"></mat-icon>
+      </a>
+      <a mat-icon-button
+         color="primary"
+         href="https://twitter.com/violetcold"
+         target="_blank"
+         matTooltip="Twitter">
+        <mat-icon svgIcon="twitter"></mat-icon>
+      </a>
+    </span>
+    <span fxHide.gt-xs="true">
+      <button mat-icon-button
+              [matMenuTriggerFor]="social"
+              color="primary">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #social="matMenu">
+        <a mat-menu-item
+           color="primary"
+           href="https://open.spotify.com/artist/5eh1n96NC6g34nPqpIItIo"
+           target="_blank">
+          <mat-icon svgIcon="spotify"
+                    color="primary"></mat-icon>
+          <span>Spotify</span>
+        </a>
+        <a mat-menu-item
+           color="primary"
+           href="https://www.patreon.com/violetcold"
+           target="_blank">
+          <mat-icon svgIcon="patreon"
+                    color="primary"></mat-icon>
+          <span>Patreon</span>
+        </a>
+        <a mat-menu-item
+           color="primary"
+           href="https://www.facebook.com/VioletColdOfficial/"
+           target="_blank">
+          <mat-icon svgIcon="facebook"
+                    color="primary"></mat-icon>
+          <span>Facebook</span>
+        </a>
+        <a mat-menu-item
+           color="primary"
+           href="https://www.instagram.com/violetcoldofficial/"
+           target="_blank">
+          <mat-icon svgIcon="instagram"
+                    color="primary"></mat-icon>
+          <span>Instagram</span>
+        </a>
+        <a mat-menu-item
+           color="primary"
+           href="https://twitter.com/violetcold"
+           target="_blank">
+          <mat-icon svgIcon="twitter"
+                    color="primary"></mat-icon>
+          <span>Twitter</span>
+        </a>
+      </mat-menu>
+    </span>
+  </header>
+  <section *ngIf="!(loaded)"
+           fxLayout="column"
+           fxLayoutAlign="center center">
+    <button mat-button
+            color="primary"
+            (click)="loadBuffer()">
+      Load App
+    </button>
+  </section>
+  <ng-container *ngIf="loaded">
+    <footer fxLayout="row"
+            fxLayoutAlign="start center">
+      <button mat-icon-button
+              color="primary"
+              (click)="audio.toggleMute()">
+        <mat-icon *ngIf="!(audio.muted)">volume_up</mat-icon>
+        <mat-icon *ngIf="audio.muted">volume_off</mat-icon>
+      </button>
+      <mat-slider color="primary"
+                  class="volume"
+                  [value]="audio.gain"
+                  [max]="3"
+                  [min]="0"
+                  [step]=".01"
+                  [style.width.px]="240"
+                  (input)="audio.updateVolume($event.value)"></mat-slider>
+      <span fxFlex></span>
+      <button mat-icon-button
+              color="primary"
+              (click)="toggleVisual()">
+        <mat-icon>scatter_plot</mat-icon>
+      </button>
+    </footer>
+  </ng-container>
+</div>

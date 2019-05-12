@@ -1,0 +1,168 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+@mixin style-theme($theme) {
+  $p: map-get($theme, primary);
+  $a: map-get($theme, accent);
+  $w: map-get($theme, warn);
+  $b: map-get($theme, background);
+  $f: map-get($theme, foreground);
+  $primary: mat-color($p);
+  $accent: mat-color($a);
+  $warn: mat-color($w);
+  $background: mat-color($b, background);
+  $background-card: mat-color($b, card);
+  $foreground: mat-color($f, text);
+  $app-bar: mat-color($b, app-bar);
+  $primary-contrast: mat-color($p, default-contrast);
+  $accent-contrast: mat-color($a, default-contrast);
+  $warn-contrast: mat-color($w, default-contrast);
+
+  .background-primary {
+    background-color: $primary;
+    color: $primary-contrast;
+  }
+
+  .background-accent {
+    background-color: $accent;
+    color: $accent-contrast;
+  }
+
+  .background-warn {
+    background-color: $warn;
+    color: $warn-contrast;
+  }
+
+  .background-card {
+    background-color: $background-card;
+  }
+
+  .background-stacked {
+    background-color: $background;
+  }
+
+  .background-inverted {
+    background-color: $foreground;
+    color: $background;
+  }
+
+  .color-primary {
+    color: $primary;
+  }
+
+  .color-accent {
+    color: $accent;
+  }
+
+  .color-warn {
+    color: $warn;
+  }
+
+  a.link {
+    color: $primary;
+  }
+
+  a.link:visited {
+    color: $accent;
+  }
+
+  a,
+  a:visited,
+  a:focus
+  mat-typography a.mat-display-2,
+  mat-typography a.mat-display-2:visited,
+  mat-typography a.mat-display-2:focus {
+    color: $foreground;
+    cursor: pointer;
+  }
+
+  text {
+    fill: $foreground;
+  }
+}
+
+html, body, div.app-container {
+  overflow: hidden;
+  margin: 0;
+  height: 100%;
+}
+
+div.app-container {
+  background: url(https://github.com/JaimeStill/violet-cold-in-space/blob/master/src/assets/images/background.jpg?raw=true);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+section.body {
+  height: 100%;
+}
+
+header,
+footer {
+  background-color: rgba(0, 0, 0, .6);
+}
+
+header a.mat-icon-button {
+  margin: 0 8px;
+}
+
+header a.mat-icon-button:first-child {
+  margin-left: 0px;
+}
+
+header a.mat-icon-button:last-child {
+  margin-right: 24px;
+}
+
+canvas.visuals {
+  display: block;
+  margin-left: 10%;
+  margin-right: 10%;
+  max-height: 180px;
+}
+
+img.album-art {
+  margin-bottom: 4px;
+}
+
+div.image-container {
+  position: relative;
+}
+
+button.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -28px;
+  margin-top: -32px;
+  mat-icon.mat-icon.large {
+    font-size: 36px;
+  }
+}
+
+.mat-typography a.mat-display-2,
+button.mat-icon-button {
+  margin: 8px;
+}
+
+.mat-typography a.mat-display-2 {
+  margin-left: 24px;
+  text-decoration: none;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.static-elevation {
+  @include mat-elevation(2);
+}
+
+.elevated {
+  @include mat-elevation-transition;
+  @include mat-elevation(2);
+
+  &:hover {
+    @include mat-elevation(6);
+  }
+}
