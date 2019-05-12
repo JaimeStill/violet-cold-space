@@ -25,7 +25,6 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   ]
 })
 export class AppComponent {
-  img64: SafeUrl;
   isOscillator = true;
 
   constructor(
